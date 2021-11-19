@@ -7,13 +7,13 @@ A 2 day cloud based virtual training workshop conducted by VSD-IAT from 20<sup>t
 
 ## Table of Contents
 
-  * [Day 1 - ](#)
+  * [Day 1 - Bandgap Design Theory](#Day-1---bandgap-design-theory)
     + [](#)
-  * [Day 2 - ](#)
+  * [Day 2](#)
     + [](#)
   * [Acknowledgements](#acknowledgements)
 
-## Day 1 - 
+## Day 1 - Bandgap Design Theory
 
 ### 
 
