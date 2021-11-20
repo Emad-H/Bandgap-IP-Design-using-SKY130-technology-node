@@ -182,13 +182,55 @@ Finally, the complete bandgap reference circuit is shown below.
 
 ## Day 2 - Bandgap Design using SKY130
 
+A typical Analog Design Flow is shown below. Here, DRC stands for design rule checks and PEX stands for parasitics extraction.
+
+![design-flow](Day2/2-0.png)
+
 ### Tools and PDK Setup
 
+The tools we shall use are NgSpice, Magic and Netgen; along with the Google SkyWater Open Source PDKs.
 
+**Setting up SkyWater PDK Libraries and Tech Files**
 
+We can download the PDK libraries for primitives, available [here](https://github.com/google/skywater-pdk-libs-sky130_fd_pr), by running the command `git clone https://github.com/google/skywater-pdk-libs-sky130_fd_pr.git` as shown below.
 
+![git-clone](Day2/2-1.png)
 
+This command should add device models and related files for all primitive devices in the SkyWater PDK libraries onto your home directory.
 
+Next, we need to download the Magic tech file for layout design and Netgen tech file for LVS. These can be found [here](https://github.com/silicon-vlsi-org/eda-technology) and we can download them with the command `git clone https://github.com/silicon-vlsi-org/eda-technology.git` as follows.
+
+![git-clone2](Day2/2-2.png)
+
+Now, we can install the Open-Source EDA Tools.
+
+Open_PDKs is a Makefile based installer that takes files from the SkyWater PDKs and reformats them for a number of open source EDA tools, which can be found [here](https://github.com/RTimothyEdwards/open_pdks).
+
+Tools currently supported by open_pdks:
+- Magic
+- Klayout
+- Openlane
+- Xschem
+- Netgen
+- Ngspice
+- IVerilog
+- qflow
+- IRSIM
+- xcircuit
+
+To install SKY130 PDKs, we must clone the repository and specify the process to compile and install using the following commands.
+
+```
+git clone https://github.com/RTimothyEdwards/open_pdks
+cd open_pdks
+./configure --enable-sky130-pdk
+make
+sudo make install
+```
+
+The ```make``` process grabs the SKY130 repository and submodules, as well as a few third party repositories to use in the install. It then builds the libraries from these various repositories. 
+
+Open_PDKs uses a common installed filesystem structure, where the SkyWater PDKs are placed under the directory ```/usr/share/pdk/sky130A/```. Under this main SK130 PDK directory, are 2 subdirectories ```libs.tech```, which contains all subdirectories for the open source tool setups, and ```libs.ref```, which contains the reference libraries in various formats. The project directory follows a similar format, with a ```project_root/``` directory containing subdirectories for each tool or flow needed.
 
 
 
