@@ -14,8 +14,8 @@ A 2 day cloud based virtual training workshop conducted by VSD-IAT from 20<sup>t
     + [Self-Biased Current Mirror Circuit](#self-biased-current-mirror-circuit)
     + [Start-Up Circuit](#start-up-circuit)
     + [Complete BGR Circuit](#complete-bgr-circuit)
-  * [Day 2](#)
-    + [](#)
+  * [Day 2 - Bandgap Design using SKY130](#day-2---bandgap-design-using-sky30)
+    + [Tools and PDK Setup](#tools-and-pdk-setup)
   * [Acknowledgements](#acknowledgements)
 
 ## Day 1 - Bandgap Design Theory
@@ -180,8 +180,9 @@ Finally, the complete bandgap reference circuit is shown below.
 
 <!-- > Note: MP<sub>1</sub> and MP<sub>2</sub> must be kept at saturation. MP<sub>3</sub> can be identical to both MP<sub>1</sub> and MP<sub>2</sub>. Q<sub>3</sub> can also be the same as Q<sub>1</sub>. -->
 
-## Day 2 - 
+## Day 2 - Bandgap Design using SKY130
 
+### Tools and PDK Setup
 
 
 
