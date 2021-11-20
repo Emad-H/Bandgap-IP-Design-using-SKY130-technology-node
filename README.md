@@ -12,6 +12,8 @@ A 2 day cloud based virtual training workshop conducted by VSD-IAT from 20<sup>t
     + [CTAT Voltage Generation Circuit](#ctat-voltage-generation-circuit)
     + [PTAT Voltage Generation Circuit](#ptat-voltage-generation-circuit)
     + [Self-Biased Current Mirror Circuit](#self-biased-current-mirror-circuit)
+    + [Start-Up Circuit](#start-up-circuit)
+    + [Complete BGR Circuit](#complete-bgr-circuit)
   * [Day 2](#)
     + [](#)
   * [Acknowledgements](#acknowledgements)
@@ -125,7 +127,76 @@ The issue with a simple current mirror is that the output current is very sensit
 
 The figure above shows a self-biased current mirror. The idea of self-biasing is that if *I<sub>OUT</sub>* can be independent of *V<sub>DD</sub>*, then *I<sub>REF</sub>* can be a replica of *I<sub>OUT</sub>*. Here, MP<sub>1</sub> and MP<sub>2</sub> copy *I<sub>OUT</sub>* and define *I<sub>REF</sub>*, meaning *I<sub>REF</sub>* is bootstrapped to *I<sub>OUT</sub>*. Since each diode-connected device feeds from a current source, *I<sub>OUT</sub>* and *I<sub>REF</sub>* are ultimately independent of *V<sub>DD</sub>*.
 
-In this circuit however, the currents are given by the equation I<sub>OUT</sub> = K &sdot; I<sub>REF</sub> and cannot be uniquely defined.
+In this circuit however, the currents are given by the equation I<sub>OUT</sub> = K &sdot; I<sub>REF</sub> and *I<sub>OUT</sub>* cannot be uniquely defined. We can fix this using the circuit below.
+
+![selfbias-fix](Day1/1-10.png)
+
+Here, R<sub>S</sub> allows us to choose a value of *I<sub>OUT</sub>* as desired. Also, since the loop-gain is now less than 1, the circuit is always stable. However, this creates a start-up issue in the circuit due to the existence of a new degenerate bias point. This means when a supply voltage is given, the circuit may still have zero current flowing, and so  we must use a start-up circuit to fix this. Finally, the entire circuit is shown below (without start-up circuit).
+
+![selfbias-full](Day1/1-11.png)
+
+### Reference Voltage Branch Circuit
+
+![refvolt-ckt](Day1/1-12.png)
+
+In the figure above, we see both the CTAT and PTAT generation circuits used to generate the reference voltage *V<sub>REF</sub>*. From the circuit, we can observe the following:
+- Current I<sub>3</sub> is the same as I<sub>1</sub> & I<sub>2</sub>
+- Voltage across Q<sub>3</sub> is CTAT type
+- Voltage across R<sub>2</sub> is PTAT type
+- V<sub>REF</sub> is the addition of CTAT and PTAT voltages
+- R<sub>2</sub> = α &sdot; R<sub>1</sub>
+
+**Design of Resistance R<sub>2</sub>**
+
+In order to get a temperature coefficient of 0 for V<sub>REF</sub>, we must adjust the value of R<sub>2</sub> such that R<sub>2</sub> = α &sdot; R<sub>1</sub>. We can find the value of α as follows:
+
+![r2-aplha](Day1/1-13.png)
+
+where,
+
+![r2-where](Day1/1-14.png)
+
+This way, we can get an output reference voltage V<sub>REF</sub> with 0 temperature coefficient at nominal temperatures and slight variations at higher temperatures.
+
+### Start-Up Circuit
+
+If the channel length modulation is negligible, the current hardly depends on the supply voltage. The main issue with supply independent biasing is the existence of degenerate bias points. There are two stable operating points:
+- I<sub>in</sub> = I<sub>out</sub> = 0A (undesired operating point)
+- Desired operating points
+
+We must keep the circuit out of the undesired operating point when the supply is turned on, and must not interfere with the circuit once it reaches the desired operating point. We can do this by adding a start-up circuit as shown below.
+
+![start-up-ckt](Day1/1-15.png)
+
+Initially, the current in every branch remains zero. Because of this, the voltage at net2 follows the voltage V<sub>DDD</sub>, while voltage at net1 will be nearly zero. In order to cause a current flow in net1, we use the transistor MP<sub>5</sub>. To create a current flow through MP<sub>5</sub>, there must be a voltage difference greater than V<sub>t</sub> accross its source and gate terminals. This is done by the transistor MN<sub>3</sub>.
+
+As current flows through net6, transisitor MN<sub>3</sub> creates a voltage difference of greater than V<sub>t</sub> accross transistor MP<sub>5</sub>, allowing current through net1. This current gets mirrored to net 2, causing the circuit to move into a desired stable point. As current stably flows through net 2, the voltage at net2 goes down, causing transistor MP<sub>5</sub> to go into reverse bias. This turns off transistor MP<sub>5</sub>, allowing the start-up circuit to isolate itself from the reference voltage circuit (however, some minimal current will always flow through net6).
+
+### Complete BGR Circuit
+
+Finally, the complete bandgap reference circuit is shown below.
+
+![complete-bgr](Day1/1-16.png)
+
+<!-- > Note: MP<sub>1</sub> and MP<sub>2</sub> must be kept at saturation. MP<sub>3</sub> can be identical to both MP<sub>1</sub> and MP<sub>2</sub>. Q<sub>3</sub> can also be the same as Q<sub>1</sub>. -->
+
+## Day 2 - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
