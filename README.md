@@ -204,7 +204,6 @@ Finally, the complete bandgap reference circuit is shown below.
 
 
 
-
 ## Acknowledgements
 
 - [Kunal Ghosh](https://github.com/kunalg123)
