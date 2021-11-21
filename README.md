@@ -749,7 +749,7 @@ xmp3    net3    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     
 xmn1    net1    net1    q1      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 xmn2    net2    net1    q2      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 
-*** start-upcircuit
+*** start-up circuit
 xmp4    net4    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp5    net5    net2    net4    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp6    net7    net6    net2    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=2
@@ -826,23 +826,108 @@ Let us look at what happens if we remove the start-up circuit. We have commented
 ![bgr-nostartup-vnets](Day2/2-52.png)
 ![bgr-nostartup-vid](Day2/2-53.png)
 
+Without the transistor MP<sub>6</sub>, we can see that net2 closely follows and remains at V<sub>DD</sub>, while net1 remains almost at GND. Also, the current in all branches is near zero. This shows the BGR circuit's dependence on a start-up circuit.
+
 ### Layout Design
 
+We shall use the open source layout editor tool Magic. We can call the Magic GUI and console using the following command
 
+![mag-cmd](Day2/2-3.png)
 
+**Basic Cell Layouts**
 
+**1.  Resistor**
 
+![mag-res1](Day2/2-54.png)
 
+**2.  PNP (BJT)**
 
+![mag-bjt](Day2/2-55.png)
 
+**3.  NFET**
 
+![mag-NFET1](Day2/2-56.png)
+![mag-NFET2](Day2/2-57.png)
+
+**4.  PFET**
+
+![mag-pfet](Day2/2-58.png)
+
+**Block Layouts**
+
+**1.  Resistor Bank**
+
+![mag-resbank](Day2/2-59.png)
+
+**2.  PFETs Block**
+
+![mag-pfet-blk](Day2/2-60.png)
+
+**3.  NFETs Block**
+
+![mag-nfet-blk](Day2/2-61.png)
+
+**3.  PNP10 (BJT) Block**
+
+![mag-pnp-blk](Day2/2-62.png)
+
+**4.  Starter NFET**
+
+![mag-starter-nfet](Day2/2-63.png)
+
+### Top Level Layout
+
+![mag-top-layout](Day2/2-64.png)
+
+### Top Level Layout Extraction, LVS an Post-Layout Simulation
+
+We can extract the layout either cell by cell, or extract the complete layout netlist. To extract cell-by-cell, we first go to Options -> Cell Manager. We can now select the cell we want to load. This is shown below.
+
+![mag-load-celmgr](Day2/2-65.png)
+
+Next, we extract the NFET cells using the following commmands.
+
+```
+extract all
+ext2sim label on
+ext2sim
+ext2spice scale off
+ext2spice hieracrhy off
+ext2spice
+```
+![mag-ext-cmd](Day2/2-66.png)
+
+If we look at the nfets.spice file created by Magic, we can see the parasitics extracted at the bottom of the netlist, as shown below.
+
+![mag-nfets-net](Day2/2-67.png)
+
+Similarly, we must extract thespice files from Magic for all the remaining subcells (pnp10, pfets, startenfet and resbank). Now, we can extract the top level layout using the same commands as before. We should get the following extracted netlist.
+
+> Note: For LVS in netgen, we must include the netlists for the 5 subcells. This is because the top level netlist does not include the cell definitions for the subcells. We must  also comment out all the parasitics in the top level netlist, as well as all the 5 lower level netlists for LVS, as the parasitics are devices in the netlist but aren't defined.
+
+![mag-top-net](Day2/2-68.png)
+
+Now, we can run the command `netgen` to call the Netgen console. Here, we type the following command to run LVS.
+
+![netgen-lvs-cmd](Day2/2-69.png)
+
+Once done, we should be able to see that both the schematic and layout netlists match uniquely.
+
+![netgen-lvs-match](Day2/2-70.png)
+![netgen-lvs-match-file](Day2/2-71.png)
+
+Finally, we can do post layout simulations using the extracted and edited spice file. Here, we must add include the paths to the sky130.lib.spice and sky130_fd_pr__model__pnp.model.spice files; and can include the parasitics as well. We sahll use the ss corner for this simulation. If done correctly, we should get the following plot.
+
+![postlayout-sim](Day2/2-72.png)
+
+As we can see, even with the ss corner we get around 25 ppm/&deg;C in our post layout simulation. This is a major improvement over the pre-layout simulations using ss corner.
 
 ## Acknowledgements
 
+- [Santunu Sarangi](https://www.linkedin.com/in/santunu-sarangi-b731305b)
+- [Saroj Rout](https://www.linkedin.com/in/sroutk/)
 - [Kunal Ghosh](https://github.com/kunalg123)
 - [VSD-IAT](https://vsdiat.com/)
-
-
 
 
 <!--- no startup specify and elaborate --->
