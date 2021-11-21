@@ -14,8 +14,9 @@ A 2 day cloud based virtual training workshop conducted by VSD-IAT from 20<sup>t
     + [Self-Biased Current Mirror Circuit](#self-biased-current-mirror-circuit)
     + [Start-Up Circuit](#start-up-circuit)
     + [Complete BGR Circuit](#complete-bgr-circuit)
-  * [Day 2 - Bandgap Design using SKY130](#day-2---bandgap-design-using-sky30)
+  * [Day 2 - Bandgap Design using SKY130](#day-2---bandgap-design-using-sky130)
     + [Tools and PDK Setup](#tools-and-pdk-setup)
+    + [Design Specifications, Device Data and Design Steps](#design-specifications-device-data-and-design-steps)
   * [Acknowledgements](#acknowledgements)
 
 ## Day 1 - Bandgap Design Theory
@@ -202,35 +203,148 @@ Next, we need to download the Magic tech file for layout design and Netgen tech 
 
 ![git-clone2](Day2/2-2.png)
 
-Now, we can install the Open-Source EDA Tools.
+**Running Magic and Netgen**
 
-Open_PDKs is a Makefile based installer that takes files from the SkyWater PDKs and reformats them for a number of open source EDA tools, which can be found [here](https://github.com/RTimothyEdwards/open_pdks).
+We must open Magic while specifiying the tech files provided in the PDK library. This can be done using the following command.
 
-Tools currently supported by open_pdks:
-- Magic
-- Klayout
-- Openlane
-- Xschem
-- Netgen
-- Ngspice
-- IVerilog
-- qflow
-- IRSIM
-- xcircuit
+![mag-cmd](Day2/2-3.png)
 
-To install SKY130 PDKs, we must clone the repository and specify the process to compile and install using the following commands.
+Similarly, we can call the Netgen console interface using the command `netgen` in the terminal, and run LVS using the following command, while specifying the tech file.
 
-```
-git clone https://github.com/RTimothyEdwards/open_pdks
-cd open_pdks
-./configure --enable-sky130-pdk
-make
-sudo make install
-```
+![netgen-cmd](Day2/2-4.png)
 
-The ```make``` process grabs the SKY130 repository and submodules, as well as a few third party repositories to use in the install. It then builds the libraries from these various repositories. 
+### Design Specifications, Device Data and Design Steps
 
-Open_PDKs uses a common installed filesystem structure, where the SkyWater PDKs are placed under the directory ```/usr/share/pdk/sky130A/```. Under this main SK130 PDK directory, are 2 subdirectories ```libs.tech```, which contains all subdirectories for the open source tool setups, and ```libs.ref```, which contains the reference libraries in various formats. The project directory follows a similar format, with a ```project_root/``` directory containing subdirectories for each tool or flow needed.
+Let us design a bandgap reference circuit with the following design specifications:
+- Supply voltage = 1.8V
+- Temperature: -40&deg;C to 125&deg;C
+- Power Consumption < 60&mu;W
+- Off current < 2&mu;A
+- Start-up time < 2&mu;s
+- Temperature coefficient Of V<sub>REF</sub> < 50 ppm
+
+For this design, we shall be using mainly 3 types of devices: MOSFETs, BJTs and Resistors. Let us look at the datasheets for each of the devices.
+
+**1. MOSFET**
+
+|Parameter|NFET|PFET|
+|:---|:---:|:---:|
+|Type|LVT	|LVT|
+|Voltage	|1.8 V|	1.8 V|
+|Threshold Voltage	|~ 0.4 V	 |~ -0.6 V |
+|Model	Name|sky130_fd_pr__nfet_01v8_lvt	|sky130_fd_pr__pfet_01v8_lvt|
+
+**2. BJT**
+
+|Parameter	|PNP|
+|:---|:---:|
+|Current Rating|	1 &mu;A/&mu;m<sup>2</sup> to 10 &mu;A/&mu;m<sup>2</sup>|
+|Beta	|~ 12|
+|Emitter Area	|11.56 &mu;m<sup>2</sup>|
+|Model Name|	sky130_fd_pr__pnp_05v5_W3p40L3p40|
+
+**3. Resistor**
+
+|Parameter|	RPOLYH|
+|:---|:---:|
+|Sheet Resistance|	~ 350 &#x2126;|
+|Temperature Coefficient	|2.5 &#x2126;/&deg;C|
+|Bin Width	|0.35 &mu;, 0.69 &mu;, 1.41 &mu;, 5.37 &mu;|
+|Model	Name|sky130_fd_pr__res_high_po|
+
+Next, we shall adhere to the following Design Steps:
+
+**Step 1. Calculation of current**
+
+**Step 2. Choosing the number of BJTs in parallel for branch 2**'
+
+**Step 3. Calculation of resistance R<sub>1</sub>**
+
+**Step 4. Calculation of resistance R<sub>2</sub>**
+
+**Step 5. PMOS design for self-biased current mirror**
+
+**Step 6. NMOS design for self-biased current mirror**
+
+Finally, we get the following completed BGR circuit.
+
+![complete-bgr-design](Day2/2-5.png)
+
+### PTAT Design and Pre-Layout Simulation
+
+![ptat-schem](Day2/2-6.png)
+
+Given above is a PTAT voltage generation circuit chematic using a VCVS. Let us write a spice netlist for the same, as shown below.
+
+![ptat-sp-net](Day2/2-7.png)
+
+Next, we can simulate this netlist in NgSpice using the command `ngspice ptat_voltage_gen.sp`. We should now see the following in our terminal.
+
+![ptat-sp-cmd](Day2/2-8.png)
+
+Now, let us plot the variation of different net voltages with temperature. We can do this using the `plot v(qp1) v(ra1) v(qp2) v(net2)` command.
+
+![ptat-sim-plot](Day2/2-9.png)
+
+As we can see, the voltage at qp1 and qp2 are both CTAT in nature, but have different slopes. The difference of the two voltages is PTAT in nature, and can be seen using the command `plot v(ra1)-v(qp2)`. We can observe this clearly using the plot below.
+
+![ptat-sim-plot2](Day2/2-10.png)
+
+If we find the slope of the PTAT curve, we get the following.
+
+![ptat-sim-slope](Day2/2-11.png)
+
+Finally, we can plot the currents in both branches to confirm that they have equal current flowing through them.
+
+![ptat-sim-current-plot](Day2/2-12.png)
+
+### CTAT Design and Pre-Layout Simulation
+
+**CTAT with Single BJT**
+
+Similarly, we can write a spice netlist for a simple CTAT circuit using a BJT in diode configuration, as shown below.
+
+![ctat-sp-net](Day2/2-13.png)
+
+Next, we can simulate the spice netlist using NgSpice with command `ngspice ctat_voltage_gen.sp`. We should see the simulation taking place in the console as shown.
+
+![ctat-sim-cmd](Day2/2-14.png)
+
+We can display the plot for voltage at node qp1 by running the command `plot v(qp1)` in the terminal. We should see the following.
+
+![ctat-sim-plot](Day2/2-15.png)
+
+If we inspect the slope from our plot, we can find that the temperature coefficient for a single BJT is as follows.
+
+![ctat-sim-slope](Day2/2-16.png)
+
+**CTAT with Multiple BJTs**
+
+We can write a spice netlist for a CTAT circuit using 8 BJTS in diode configuration, as shown below.
+
+![ctat2-sp-net](Day2/2-17.png)
+
+Let us simulate this netlist in NgSpice and plot the voltage at node qp1 as shown below.
+
+![ctat2-sim-plot](Day2/2-18.png)
+
+Finally, if we calculate the slope, we can find that the slope increases negatively as we increase the number of BJTs.
+
+![ctat2-sim-slope](Day2/2-19.png)
+
+**CTAT with Different Current Values**
+
+Now, let us see what happens to the temperature coefficient as we vary the current through the BJT. We can write a spice netlist for this as follows.
+
+![ctat3-sp-net](Day2/2-20.png)
+
+Now, we can simulate this in NgSpice and plot the voltage at qp1.
+
+![ctat3-sim-plot](Day2/2-21.png)
+
+Frome the above plot, we can see the effect of varying the current through the BJT on the temperature coefficient of CTAT voltage. As the current dereases, the slope increases negatively.
+
+### Ideal BGR Design and Pre-Layout Simulation
 
 
 
