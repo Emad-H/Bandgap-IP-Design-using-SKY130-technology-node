@@ -196,7 +196,7 @@ A typical Analog Design Flow is shown below. Here, DRC stands for design rule ch
 
 ### Tools and PDK Setup
 
-The tools we shall use are NgSpice, Magic and Netgen; along with the Google SkyWater Open Source PDKs.
+The tools we shall use are NgSpice, Magic and Netgen; along with the Google SkyWater Open Source PDKs. All prerequisite layout and spice model files can be found [here](https://github.com/vsdip/vsdopen2021_bgr).
 
 **Setting up SkyWater PDK Libraries and Tech Files**
 
