@@ -17,6 +17,13 @@ A 2 day cloud based virtual training workshop conducted by VSD-IAT from 20<sup>t
   * [Day 2 - Bandgap Design using SKY130](#day-2---bandgap-design-using-sky130)
     + [Tools and PDK Setup](#tools-and-pdk-setup)
     + [Design Specifications, Device Data and Design Steps](#design-specifications-device-data-and-design-steps)
+    + [PTAT Design and Pre-Layout Simulation](#ptat-design-and-pre-layout-simulation)
+    + [CTAT Design and Pre-Layout Simulation](#ctat-design-and-pre-layout-simulation)
+    + [BGR using Ideal Op-Amp (VCVS)](#bgr-using-ideal-op-amp-vcvs)
+    + [Complete BGR Circuit using SBCM](#complete-bgr-circuit-using-sbcm)
+    + [Detailed Plots for Start-up Simulation](#detailed-plots-for-start-up-simulation)
+    + [Layout Design](#layout-design)
+    + [Top Level Layout Extraction, LVS and Post-Layout Simulation](#top-level-layout-extraction-lvs-and-post-layout-simulation)
   * [Acknowledgements](#acknowledgements)
 
 ## Day 1 - Bandgap Design Theory
@@ -879,7 +886,7 @@ We shall use the open source layout editor tool Magic. We can call the Magic GUI
 
 ![mag-top-layout](Day2/2-64.png)
 
-### Top Level Layout Extraction, LVS an Post-Layout Simulation
+### Top Level Layout Extraction, LVS and Post-Layout Simulation
 
 We can extract the layout either cell by cell, or extract the complete layout netlist. To extract cell-by-cell, we first go to Options -> Cell Manager. We can now select the cell we want to load. This is shown below.
 
