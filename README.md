@@ -105,7 +105,7 @@ Here, figure (b) shows that adding more BJT units further increases the negative
 
 ### PTAT Voltage Generation Circuit
 
-A PTAT voltage generation circuit uses multiple BJTs in diode configuration to create a voltage with positive temperaure coefficient. Its working principle is shown in the figure below.
+A PTAT voltage generation circuit uses multiple BJTs in diode configuration to create a voltage with positive temperature coefficient. Its working principle is shown in the figure below.
 
 ![ptat-working](Day1/1-6.png)
 
@@ -178,7 +178,7 @@ We must keep the circuit out of the undesired operating point when the supply is
 
 Initially, the current in every branch remains zero. Because of this, the voltage at net2 follows the voltage V<sub>DDD</sub>, while voltage at net1 will be nearly zero. In order to cause a current flow in net1, we use the transistor MP<sub>5</sub>. To create a current flow through MP<sub>5</sub>, there must be a voltage difference greater than V<sub>t</sub> accross its source and gate terminals. This is done by the transistor MN<sub>3</sub>.
 
-As current flows through net6, transisitor MN<sub>3</sub> creates a voltage difference of greater than V<sub>t</sub> accross transistor MP<sub>5</sub>, allowing current through net1. This current gets mirrored to net 2, causing the circuit to move into a desired stable point. As current stably flows through net 2, the voltage at net2 goes down, causing transistor MP<sub>5</sub> to go into reverse bias. This turns off transistor MP<sub>5</sub>, allowing the start-up circuit to isolate itself from the reference voltage circuit (however, some minimal current will always flow through net6).
+As current flows through net6, transistor MN<sub>3</sub> creates a voltage difference of greater than V<sub>t</sub> across transistor MP<sub>5</sub>, allowing current through net1. This current gets mirrored to net 2, causing the circuit to move into a desired stable point. As current stably flows through net 2, the voltage at net2 goes down, causing transistor MP<sub>5</sub> to go into reverse bias. This turns off transistor MP<sub>5</sub>, allowing the start-up circuit to isolate itself from the reference voltage circuit (however, some minimal current will always flow through net6).
 
 ### Complete BGR Circuit
 
@@ -212,7 +212,7 @@ Next, we need to download the Magic tech file for layout design and Netgen tech 
 
 **Running Magic and Netgen**
 
-We must open Magic while specifiying the tech files provided in the PDK library. This can be done using the following command.
+We must open Magic while specifying the tech files provided in the PDK library. This can be done using the following command.
 
 ![mag-cmd](Day2/2-3.png)
 
@@ -281,7 +281,7 @@ Finally, we get the following completed BGR circuit.
 
 ![ptat-schem](Day2/2-6.png)
 
-Given above is a PTAT voltage generation circuit chematic using a VCVS. Let us write a spice netlist for the same, as shown below.
+Given above is a PTAT voltage generation circuit schematic using a VCVS. Let us write a spice netlist for the same, as shown below.
 
 ![ptat-sp-net](Day2/2-7.png)
 
@@ -349,13 +349,13 @@ Now, we can simulate this in NgSpice and plot the voltage at qp1.
 
 ![ctat3-sim-plot](Day2/2-21.png)
 
-Frome the above plot, we can see the effect of varying the current through the BJT on the temperature coefficient of CTAT voltage. As the current dereases, the slope increases negatively.
+From the above plot, we can see the effect of varying the current through the BJT on the temperature coefficient of CTAT voltage. As the current decreases, the slope increases negatively.
 
 ### BGR using Ideal Op-Amp (VCVS)
 
 ![bgr-vcvs-schem](Day2/2-22.png)
 
-Above, we have used an ideal operational amplifier (VCVS) to design a BGR circuit. We have used the MOS dimensions for tranisitors MP<sub>1</sub>, MP<sub>2</sub> and MP<sub>3</sub> to allow the same current through all branches. In order to make the CTAT and PTAT voltages equal, the gains must be set accordingly. We do this by adjusting the values of R<sub>2</sub> and R<sub>1</sub>. Here, we have picked an &aplha; value of approximately 9. We can now write the spice netlist for this as follows.
+Above, we have used an ideal operational amplifier (VCVS) to design a BGR circuit. We have used the MOS dimensions for transistors MP<sub>1</sub>, MP<sub>2</sub> and MP<sub>3</sub> to allow the same current through all branches. In order to make the CTAT and PTAT voltages equal, the gains must be set accordingly. We do this by adjusting the values of R<sub>2</sub> and R<sub>1</sub>. Here, we have picked an &aplha; value of approximately 9. We can now write the spice netlist for this as follows.
 
 ![bgr-net1](Day2/2-23.png)
 ![bgr-net2](Day2/2-24.png)
@@ -401,10 +401,10 @@ We shall perform multiple types of analysis on this circuit.
 **1. DC Analyis vs. Temperature at tt corner**
 
 ```verilog
-**** bandgap reference circuit using self-biase current mirror by emad h. *****
+**** bandgap reference circuit using self-biased current mirror by emad h. *****
 
-.lib "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130.lib.spice tt"
-.include "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
+.lib "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130.lib.spice tt"
+.include "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
 
 .global vdd gnd
 .temp 27
@@ -416,7 +416,7 @@ xmp3    net3    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     
 xmn1    net1    net1    q1      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 xmn2    net2    net1    q2      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 
-*** start-upcircuit
+*** start-up circuit
 xmp4    net4    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp5    net5    net2    net4    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp6    net7    net6    net2    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=2
@@ -482,13 +482,13 @@ We can now simulate and plot the curves for V<sub>REF</sub>, various node voltag
 
 If we observe from the plots, we get a temperature coefficient of approximately 22 ppm/&deg;C.
 
-**2. DC Analyis vs. Temperature at ss corner**
+**2. DC Analysis vs. Temperature at ss corner**
 
 ```verilog
-**** bandgap reference circuit using self-biase current mirror at ss corner by emad h. ****
+**** bandgap reference circuit using self-biased current mirror at ss corner by emad h. ****
 
-.lib "/home/santunu/cad/eda-technology/sky130/models/spice/models/sky130.lib.spice ss"
-.include "/home/santunu/cad/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
+.lib "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130.lib.spice ss"
+.include "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
 
 .global vdd gnd
 .temp 27
@@ -500,7 +500,7 @@ xmp3    net3    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     
 xmn1    net1    net1    q1      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 xmn2    net2    net1    q2      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 
-*** start-upcircuit
+*** start-up circuit
 xmp4    net4    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp5    net5    net2    net4    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp6    net7    net6    net2    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=2
@@ -569,10 +569,10 @@ If we observe from the plots, we get a temperature coefficient of approximately 
 **3. DC Analyis vs. Temperature at ff corner**
 
 ```verilog
-**** bandgap reference circuit using self-biase current mirror at ff corner by emad h. *****
+**** bandgap reference circuit using self-biased current mirror at ff corner by emad h. *****
 
-.lib "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130.lib.spice ff"
-.include "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
+.lib "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130.lib.spice ff"
+.include "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
 
 .global vdd gnd
 .temp 27
@@ -584,7 +584,7 @@ xmp3    net3    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     
 xmn1    net1    net1    q1      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 xmn2    net2    net1    q2      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 
-*** start-upcircuit
+*** start-up circuit
 xmp4    net4    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp5    net5    net2    net4    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp6    net7    net6    net2    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=2
@@ -653,10 +653,10 @@ If we observe from the plot for V<sub>REF</sub>, we find that it is internally c
 **4. Transient Analysis at tt corner**
 
 ```verilog
-**** bandgap reference circuit using self-biase current mirror *****
+**** bandgap reference circuit using self-biased current mirror *****
 
-.lib "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130.lib.spice tt"
-.include "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
+.lib "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130.lib.spice tt"
+.include "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
 
 .global vdd gnd
 .temp 27
@@ -670,7 +670,7 @@ xmp3    net3    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     
 xmn1    net1    net1    q1      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 xmn2    net2    net1    q2      gnd     sky130_fd_pr__nfet_01v8_lvt     l=1     w=5     m=8
 
-*** start-upcircuit
+*** start-up circuit
 xmp4    net4    net2    vdd     vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp5    net5    net2    net4    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=1
 xmp6    net7    net6    net2    vdd     sky130_fd_pr__pfet_01v8_lvt     l=2     w=5     m=2
@@ -708,15 +708,15 @@ xrb17   nb16    qp3   	vdd     sky130_fd_pr__res_high_po_1p41     w=1.41  l=7.8
 xrb18   nb16    qp3     vdd     sky130_fd_pr__res_high_po_1p41     w=1.41  l=7.8
 
 *** voltage source for current measurement
-vid1	q1	qp1	dc	0
+vid1	   q1	     qp1	    dc	     0
 vid2    q2      ra1     dc      0
 vid3    net3    vref    dc      0
 vid4    net7	net1	dc	0
 vid5	net5	net6	dc	0
 
 *** supply voltage
-vsup	vdd	gnd	pulse	0	2	10n	1u	1u	1m	100u
-.tran	5n	10u
+vsup	 vdd	gnd	pulse	0	2	10n	1u	1u	1m	100u
+.tran	5n	 10u
 
 .control
 run
@@ -741,10 +741,10 @@ Here, we can see that it takes approximately 1.2 &mu;sec for all the node voltag
 To analyse the working of the start-up circuit in combination with the BGR circuit, let us run transient analysis as follows.
 
 ```verilog
-**** bandgap reference circuit using self-biase current mirror by emad h. *****
+**** bandgap reference circuit using self-biased current mirror by emad h. *****
 
-.lib "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130.lib.spice tt"
-.include "/home/srath22/cad/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
+.lib "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130.lib.spice tt"
+.include "/home/emad/cad_vsd/eda-technology/sky130/models/spice/models/sky130_fd_pr__model__pnp.model.spice"
 
 .global vdd gnd
 .temp 27
@@ -801,8 +801,8 @@ vid4    net7	   net1	   dc	     0
 vid5	   net5	   net6	   dc	     0
 
 *** supply voltage
-vsup	vdd	gnd	pulse	0	2	10n	1u	1u	1m	100u
-.tran	5n	10u
+vsup	 vdd	gnd	pulse	0	2	10n	1u	1u	1m	100u
+.tran	5n	 10u
 
 .control
 run
@@ -825,7 +825,7 @@ If we compare the voltage curves for net6 and net2, we can see that both nets fo
 
 ![bgr-startup-vid4](Day2/2-50.png)
 
-The graph above shows the current through the transistor MP<sub>6</sub>, and how it isolates itself from the BGR circuit after strat-up.
+The graph above shows the current through the transistor MP<sub>6</sub>, and how it isolates itself from the BGR circuit after start-up.
 
 Let us look at what happens if we remove the start-up circuit. We have commented out the transistor MP<sub>6</sub> from the spice netlist. Below, are the plots after simulation.
 
@@ -892,14 +892,14 @@ We can extract the layout either cell by cell, or extract the complete layout ne
 
 ![mag-load-celmgr](Day2/2-65.png)
 
-Next, we extract the NFET cells using the following commmands.
+Next, we extract the NFET cells using the following commands.
 
 ```
 extract all
 ext2sim label on
 ext2sim
 ext2spice scale off
-ext2spice hieracrhy off
+ext2spice hierarchy off
 ext2spice
 ```
 ![mag-ext-cmd](Day2/2-66.png)
@@ -923,7 +923,7 @@ Once done, we should be able to see that both the schematic and layout netlists 
 ![netgen-lvs-match](Day2/2-70.png)
 ![netgen-lvs-match-file](Day2/2-71.png)
 
-Finally, we can do post layout simulations using the extracted and edited spice file. Here, we must add include the paths to the sky130.lib.spice and sky130_fd_pr__model__pnp.model.spice files; and can include the parasitics as well. We sahll use the ss corner for this simulation. If done correctly, we should get the following plot.
+Finally, we can do post layout simulations using the extracted and edited spice file. Here, we must add include the paths to the sky130.lib.spice and sky130_fd_pr__model__pnp.model.spice files; and can include the parasitics as well. We shall use the ss corner for this simulation. If done correctly, we should get the following plot.
 
 ![postlayout-sim](Day2/2-72.png)
 
